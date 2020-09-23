@@ -1,0 +1,4 @@
+*.hcl
+*.tfvars
+.terraform/
+kubeconfig_*
