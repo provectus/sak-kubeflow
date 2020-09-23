@@ -10,46 +10,83 @@ module acm {
 }
 
 module argocd {
-  // TODO: change to main SAK repo
-  source       = "git::https://github.com/RustamGimadiev/swiss-army-kube.git//modules/cicd/argo-cd?ref=feature/argocd"
-  branch       = var.branch
-  owner        = var.owner
-  repository   = var.repository
-  cluster_name = module.kubernetes.cluster_name
-  domains      = var.domains
+  source        = "git::https://github.com/provectus/swiss-army-kube.git//modules/cicd/argo-cd?ref=feature/argocd"
+  branch        = var.branch
+  owner         = var.owner
+  repository    = var.repository
+  cluster_name  = module.kubernetes.cluster_name
+  domains       = var.domains
+  chart_version = "2.7.4"
+  path_prefix   = "apps/"
+  oidc = {
+    secret = aws_cognito_user_pool_client.argocd.client_secret
+    pool   = module.cognito.pool_id
+    name   = "Cognito"
+    id     = aws_cognito_user_pool_client.argocd.id
+  }
+  ingress_annotations = {
+    "kubernetes.io/ingress.class"               = "alb"
+    "alb.ingress.kubernetes.io/scheme"          = "internet-facing"
+    "alb.ingress.kubernetes.io/certificate-arn" = module.acm.this_acm_certificate_arn
+    "alb.ingress.kubernetes.io/listen-ports" = jsonencode(
+      [{ "HTTPS" = 443 }]
+    )
+  }
+}
+
+module kubeflow {
+  source = "git::https://github.com/provectus/swiss-army-kube.git//modules/kubeflow-operator?ref=feature/argocd"
+  ingress_annotations = {
+    "kubernetes.io/ingress.class"               = "alb"
+    "alb.ingress.kubernetes.io/scheme"          = "internet-facing"
+    "alb.ingress.kubernetes.io/certificate-arn" = module.acm.this_acm_certificate_arn
+    "alb.ingress.kubernetes.io/auth-type"       = "cognito"
+    "alb.ingress.kubernetes.io/auth-idp-cognito" = jsonencode({
+      "UserPoolArn"      = module.cognito.pool_arn
+      "UserPoolClientId" = aws_cognito_user_pool_client.kubeflow.id
+      "UserPoolDomain"   = module.cognito.domain
+    })
+    "alb.ingress.kubernetes.io/listen-ports" = jsonencode(
+      [{ "HTTPS" = 443 }]
+    )
+  }
+  domain = "kubeflow.${var.domains[0]}"
+  argocd = module.argocd.state
 }
 
 module cluster_autoscaler {
-  // TODO: change to main SAK repo
-  source            = "git::https://github.com/RustamGimadiev/swiss-army-kube.git//modules/system/cluster-autoscaler?ref=feature/argocd"
+  source            = "git::https://github.com/provectus/swiss-army-kube.git//modules/system/cluster-autoscaler?ref=feature/argocd"
   image_tag         = "v1.15.7"
   cluster_name      = module.kubernetes.cluster_name
   module_depends_on = [module.kubernetes]
+  argocd            = module.argocd.state
+}
+
+module cert_manager {
+  module_depends_on = [module.kubernetes]
+  source            = "git::https://github.com/provectus/swiss-army-kube.git//modules/system/cert-manager?ref=feature/argocd"
+  cluster_name      = module.kubernetes.cluster_name
+  domains           = var.domains
+  vpc_id            = module.network.vpc_id
+  environment       = var.environment
+  project           = var.project
+  zone_id           = module.external_dns.zone_id
+  email             = var.cert_manager_email
+  argocd            = module.argocd.state
 }
 
 module alb_ingress {
-  // TODO: change to main SAK repo
   module_depends_on = [module.kubernetes]
-  source            = "git::https://github.com/RustamGimadiev/swiss-army-kube.git//modules/ingress/aws-alb?ref=feature/argocd"
+  source            = "git::https://github.com/provectus/swiss-army-kube.git//modules/ingress/aws-alb?ref=feature/argocd"
   cluster_name      = module.kubernetes.cluster_name
   domains           = var.domains
   vpc_id            = module.network.vpc_id
   certificates_arns = [module.acm.this_acm_certificate_arn]
+  argocd            = module.argocd.state
 }
 
-# module cert_manager {
-#   source       = "git::https://github.com/RustamGimadiev/swiss-army-kube.git//modules/system/cert-manager?ref=feature/argocd"
-#   cluster_name = module.kubernetes.cluster_name
-# }
-
-# module external_secrets {
-#   source       = "git::https://github.com/RustamGimadiev/swiss-army-kube.git//modules/system/external-secrets?ref=feature/argocd"
-#   cluster_name = module.kubernetes.cluster_name
-# }
-
 module external_dns {
-  // TODO: change to main SAK repo
-  source       = "git::https://github.com/RustamGimadiev/swiss-army-kube.git//modules/system/external-dns?ref=feature/argocd"
+  source       = "git::https://github.com/provectus/swiss-army-kube.git//modules/system/external-dns?ref=feature/argocd"
   cluster_name = module.kubernetes.cluster_name
   environment  = var.environment
   project      = var.project
@@ -57,9 +94,35 @@ module external_dns {
   aws_private  = var.aws_private
   domains      = var.domains
   mainzoneid   = var.mainzoneid
+  argocd       = module.argocd.state
 }
 
-# module nginx_ingress {
-#   // TODO: change to main SAK repo
-#   source = "git::https://github.com/RustamGimadiev/swiss-army-kube.git//modules/ingress/nginx?ref=feature/argocd"
-# }
+module cognito {
+  source       = "git::https://github.com/provectus/swiss-army-kube.git//modules/cognito?ref=feature/argocd"
+  domain       = var.domains[0]
+  zone_id      = module.external_dns.zone_id
+  cluster_name = module.kubernetes.cluster_name
+  tags         = local.tags
+}
+
+resource aws_cognito_user_pool_client kubeflow {
+  name                                 = "kubeflow"
+  user_pool_id                         = module.cognito.pool_id
+  callback_urls                        = ["https://kubeflow.${var.domains[0]}/oauth2/idpresponse"]
+  allowed_oauth_flows_user_pool_client = true
+  allowed_oauth_scopes                 = ["email", "openid", "profile", "aws.cognito.signin.user.admin"]
+  allowed_oauth_flows                  = ["code"]
+  supported_identity_providers         = ["COGNITO"]
+  generate_secret                      = true
+}
+
+resource aws_cognito_user_pool_client argocd {
+  name                                 = "argocd"
+  user_pool_id                         = module.cognito.pool_id
+  callback_urls                        = ["https://argocd.${var.domains[0]}/auth/callback"]
+  allowed_oauth_flows_user_pool_client = true
+  allowed_oauth_scopes                 = ["openid", "profile", "email"]
+  allowed_oauth_flows                  = ["code"]
+  supported_identity_providers         = ["COGNITO"]
+  generate_secret                      = true
+}
