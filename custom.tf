@@ -17,7 +17,6 @@ module argocd {
   cluster_name  = module.kubernetes.cluster_name
   domains       = var.domains
   chart_version = "2.7.4"
-  path_prefix   = "apps/"
   oidc = {
     secret = aws_cognito_user_pool_client.argocd.client_secret
     pool   = module.cognito.pool_id

@@ -31,4 +31,7 @@ module kubernetes {
   vpc_id             = module.network.vpc_id
   subnets            = module.network.private_subnets
   admin_arns         = var.admin_arns
+
+  spot_max_cluster_size             = 5
+  on_demand_common_max_cluster_size = 5
 }
