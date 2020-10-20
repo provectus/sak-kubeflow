@@ -1,5 +1,5 @@
 cluster_name = "sandbox"
-branch = "example"
+branch       = "example"
 
 #Main route53 zone id if exist (Change It)
 mainzoneid = "Z02149423PVQ0YMP19F13"
@@ -18,3 +18,11 @@ admin_arns = [
 
 # Email that would be used for LetsEncrypt notifications
 cert_manager_email = "rgimadiev@provectus.com"
+
+cognito_users = [
+  {
+    email    = "rgimadiev@provectus.com"
+    username = "rgimadiev"
+    group    = "administrators"
+  }
+]
