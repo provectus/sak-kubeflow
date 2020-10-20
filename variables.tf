@@ -76,3 +76,9 @@ variable admin_arns {
 variable cert_manager_email {
   type = string
 }
+
+
+variable cognito_users {
+  type    = list(map(string))
+  default = []
+}

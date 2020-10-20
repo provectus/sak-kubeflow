@@ -125,3 +125,38 @@ resource aws_cognito_user_pool_client argocd {
   supported_identity_providers         = ["COGNITO"]
   generate_secret                      = true
 }
+
+
+
+### Optional step of populating Cognito User Pool
+### will be executed locally, so aws-cli should present on the local machine
+### this is an inelegant way for managing users, suitable only for demo purpose
+
+resource aws_cognito_user_group this {
+  for_each = toset(distinct(values(
+    {
+      for k, v in var.cognito_users :
+      k => lookup(v, "group", "read-only")
+    }
+  )))
+  name         = each.value
+  user_pool_id = module.cognito.pool_id
+}
+
+resource null_resource cognito_users {
+  depends_on = [aws_cognito_user_group.this]
+  for_each = {
+    for k, v in var.cognito_users :
+    v.username => v
+  }
+  provisioner local-exec {
+    command = "aws --region ${var.aws_region} cognito-idp admin-create-user --user-pool-id ${module.cognito.pool_id} --username ${each.key} --user-attributes Name=email,Value=${each.value.email}"
+  }
+  provisioner local-exec {
+    command = "aws --region ${var.aws_region} cognito-idp admin-add-user-to-group --user-pool-id ${module.cognito.pool_id} --username ${each.key} --group-name ${lookup(each.value, "group", "read-only")}"
+  }
+  provisioner local-exec {
+    when    = "destroy"
+    command = "aws --region ${var.aws_region} cognito-idp admin-delete-user --user-pool-id ${module.cognito.pool_id} --username ${each.key}"
+  }
+}
