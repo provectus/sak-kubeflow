@@ -1,10 +1,14 @@
 # kubeflow-sandbox
-Reference repository for creating EKS clusters with simple Kubeflow installation
+Reference repository for creating EKS clusters with simple Kubeflow installation based on [Swiss-Army-Kube](https://github.com/provectus/swiss-army-kube) collection of modules.
 
 For examining the live environment with the files you can check the `example` branch of that repository
+## Owerview
+This Terraform code create AWS EKS cluster and other related things as EC2 scaling groups, IAM roles, etc. All Kubernetes contents are managed by ArgoCD (which also recursively managed by himself,  can read more about that on the ArgoCD documentation page https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#manage-argo-cd-using-argo-cd), generally this repository should be interpreted as an Infrastructure as a Code repository with GitOps paradigm. Each Kubernetes manifests that placed in the `apps` folder will be deployed and future managed by ArgoCD, for that need was created umbrella-application `swiss-army-kube` (that match with the name of source Terraform module collection). For authentication is used an Amazon Cognito User Pools. Is possible to manage Cognito users and groups by Terraform code, but in that case, need to install the AWS CLI tool, because official providers do not support such resources yet.
 ## Preparing workspace
 ### Install Terrafrom
 Please follow to [official Terraform site](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+### Install AWS-CLI
+Please follow to [official AWS documentations](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
 ### Create configuration files
 Need to create two configuration files
 - `backend.hcl`
@@ -36,6 +40,18 @@ admin_arns = [
 # Email that would be used for LetsEncrypt notifications
 cert_manager_email = "info@some.domain.local"
 
+# An optional list of users for Cognito Pool
+cognito_users = [
+  {
+    email    = "qa@some.domain.local"
+    username = "qa"
+    group    = "masters"
+  },
+  {
+    email    = "developer@some.domain.local"
+    username = "developer"
+  }
+]
 ```
 In most cases, you should also override variables related to the GitHub repository such  a `repository`, `branch` and `owner`
 ### Initialize Terraform
