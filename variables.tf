@@ -13,7 +13,7 @@ variable owner {
 variable repository {
   type        = string
   description = "describe your variable"
-  default     = "kubeflow-sandbox"
+  default     = "sak-kubeflow"
 }
 
 variable aws_region {
@@ -81,4 +81,14 @@ variable cert_manager_email {
 variable cognito_users {
   type    = list(map(string))
   default = []
+}
+
+variable argo_path_prefix {
+  type    = string
+  default = ""
+}
+
+variable argo_apps_dir {
+  type    = string
+  default = "apps"
 }

@@ -31,6 +31,8 @@ module argocd {
       [{ "HTTPS" = 443 }]
     )
   }
+  path_prefix = var.argo_path_prefix
+  apps_dir    = var.argo_apps_dir
 }
 
 module kubeflow {
@@ -156,7 +158,7 @@ resource null_resource cognito_users {
     command = "aws --region ${var.aws_region} cognito-idp admin-add-user-to-group --user-pool-id ${module.cognito.pool_id} --username ${each.key} --group-name ${lookup(each.value, "group", "read-only")}"
   }
   provisioner local-exec {
-    when    = "destroy"
+    when    = destroy
     command = "aws --region ${var.aws_region} cognito-idp admin-delete-user --user-pool-id ${module.cognito.pool_id} --username ${each.key}"
   }
 }
