@@ -1,0 +1,104 @@
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "Application"
+"metadata":
+  "name": "argocd"
+  "namespace": "argocd"
+"spec":
+  "destination":
+    "namespace": "argocd"
+    "server": "https://kubernetes.default.svc"
+  "project": "default"
+  "source":
+    "chart": "argo-cd"
+    "helm":
+      "parameters":
+      - "name": "server.rbacConfig.policy\\.default"
+        "value": "role:readonly"
+      - "name": "server.rbacConfig.policy\\.csv"
+        "value": |
+          g, administrators, role:admin
+      - "name": "server.config.oidc\\.config"
+        "value": |
+          "clientID": "65fbdjfv6sfqtp9q5a36bus8sk"
+          "clientSecret": "KMS_ENC:AQICAHhwS9piUg0hs0GGhOeV5jmOkHfNKQGbUh/NqOy6CXx3QAF8+p9g7JLyCIss8+C7lx/PAAAAlTCBkgYJKoZIhvcNAQcGoIGEMIGBAgEAMHwGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMC+u6II1UmglAfvlVAgEQgE/aOjcAJx245wATg/0eu0LBnK6cHjPn6Ron53mwGvVcxeRyRsZvZtvWMdN7pyVxBtXo7nmgHfHYCzB7sr65zQ3mtNxDNyQsr4PHrMtYXiLF:"
+          "issuer": "https://cognito-idp.us-east-2.amazonaws.com/us-east-2_4BlWqtQIh"
+          "name": "Cognito"
+          "requestedIDTokenClaims":
+            "cognito:groups":
+              "essential": true
+          "requestedScopes":
+          - "openid"
+          - "profile"
+          - "email"
+      - "name": "server.ingress.paths[0]"
+        "value": "/*"
+      - "name": "server.extraArgs[0]"
+        "value": "--insecure"
+      - "name": "server.service.type"
+        "value": "NodePort"
+      - "name": "configs.secret.argocdServerAdminPassword"
+        "value": "$2a$10$lII8JqGo68sip.k13q3qE.3/Wbt9oblQcw4HEXYlhjhpumNAt.Le2"
+      - "name": "server.ingress.enabled"
+        "value": "true"
+      - "name": "server.config.url"
+        "value": "https://argocd.simple.edu.provectus.io"
+      - "name": "server.ingress.tls[0].hosts[0]"
+        "value": "argocd.simple.edu.provectus.io"
+      - "name": "server.ingress.hosts[0]"
+        "value": "argocd.simple.edu.provectus.io"
+      - "name": "server.ingress.tls[0].secretName"
+        "value": "argocd-simple.edu.provectus.io-tls"
+      - "name": "server.ingress.annotations.alb\\.ingress\\.kubernetes\\.io/certificate-arn"
+        "value": "arn:aws:acm:us-east-2:245582572290:certificate/06dab8e1-d094-43f9-99ad-254d347f893e"
+      - "name": "server.ingress.annotations.alb\\.ingress\\.kubernetes\\.io/listen-ports"
+        "value": "[{\"HTTPS\":443}]"
+      - "name": "server.ingress.annotations.alb\\.ingress\\.kubernetes\\.io/scheme"
+        "value": "internet-facing"
+      - "name": "server.ingress.annotations.kubernetes\\.io/ingress\\.class"
+        "value": "alb"
+      - "name": "dex.enabled"
+        "value": "false"
+      - "name": "global.securityContext.fsGroup"
+        "value": "999"
+      - "name": "installCRDs"
+        "value": "false"
+      - "name": "repoServer.env[0].name"
+        "value": "AWS_DEFAULT_REGION"
+      - "name": "repoServer.env[0].value"
+        "value": "us-east-2"
+      - "name": "repoServer.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+        "value": "arn:aws:iam::245582572290:role/simple_argocd"
+      - "name": "repoServer.serviceAccount.create"
+        "value": "true"
+      - "name": "repoServer.volumeMounts[0].mountPath"
+        "value": "/opt/decryptor/bin"
+      - "name": "repoServer.volumeMounts[0].name"
+        "value": "decryptor"
+      - "name": "repoServer.volumes[0].configMap.items[0].key"
+        "value": "decryptor"
+      - "name": "repoServer.volumes[0].configMap.items[0].path"
+        "value": "decryptor"
+      - "name": "repoServer.volumes[0].configMap.name"
+        "value": "argocd-decryptor"
+      - "name": "repoServer.volumes[0].name"
+        "value": "decryptor"
+      - "name": "server.config.configManagementPlugins"
+        "value": |
+          - "generate":
+              "args":
+              - "/opt/decryptor/bin/decryptor"
+              "command":
+              - "/usr/bin/python3"
+            "init":
+              "args":
+              - "install"
+              - "boto3"
+              "command":
+              - "/usr/bin/pip3"
+            "name": "decryptor"
+    "repoURL": "https://argoproj.github.io/argo-helm"
+    "targetRevision": "2.7.4"
+  "syncPolicy":
+    "automated":
+      "prune": true
+      "selfHeal": true
