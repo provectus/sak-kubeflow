@@ -1,7 +1,8 @@
 # kubeflow-sandbox
 Reference repository for creating EKS clusters with simple Kubeflow installation based on [Swiss-Army-Kube](https://github.com/provectus/swiss-army-kube) collection of modules.
 
-For examining the live environment with the files you can check the `examples/simple` folder of that repository
+For examining the live environment you can check the `examples/simple` folder of that repository
+
 ## Overview
 This Terraform code create AWS EKS cluster and other related things as EC2 scaling groups, IAM roles, etc. All Kubernetes contents are managed by ArgoCD (which also recursively managed by himself,  can read more about that on the ArgoCD documentation page https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#manage-argo-cd-using-argo-cd), generally this repository should be interpreted as an Infrastructure as a Code repository with GitOps paradigm. Each Kubernetes manifests that placed in the `apps` folder will be deployed and future managed by ArgoCD, for that need was created umbrella-application `swiss-army-kube` (that match with the name of source Terraform module collection). For authentication is used an Amazon Cognito User Pools. Is possible to manage Cognito users and groups by Terraform code, but in that case, need to install the AWS CLI tool, because official providers do not support such resources yet.
 ## Preparing workspace
