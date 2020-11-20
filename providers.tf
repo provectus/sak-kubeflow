@@ -1,8 +1,3 @@
-terraform {
-  backend s3 {}
-  required_version = ">= 0.12"
-}
-
 provider aws {
   version = "2.66"
   region  = var.aws_region
@@ -17,7 +12,7 @@ provider kubernetes {
 }
 
 provider helm {
-  version = "1.3.0"
+  version = "1.1.1"
 
   kubernetes {
     host                   = data.aws_eks_cluster.cluster.endpoint

@@ -31,6 +31,8 @@ module argocd {
       [{ "HTTPS" = 443 }]
     )
   }
+  path_prefix = var.argo_path_prefix
+  apps_dir    = var.argo_apps_dir
 }
 
 module kubeflow {
@@ -102,6 +104,14 @@ module cognito {
   zone_id      = module.external_dns.zone_id
   cluster_name = module.kubernetes.cluster_name
   tags         = local.tags
+  invite_template = {
+    email_message = <<EOT
+Your SAK Kubeflow username is {username} and temporary password is {####}.
+Please follow the URL to access Kubeflow: https://kubeflow.${var.domains[0]}
+EOT
+    email_subject = "Your SAK Kubeflow temporary password"
+    sms_message   = "Your SAK Kubeflow username is {username} and temporary password is {####}"
+  }
 }
 
 resource aws_cognito_user_pool_client kubeflow {
@@ -156,7 +166,7 @@ resource null_resource cognito_users {
     command = "aws --region ${var.aws_region} cognito-idp admin-add-user-to-group --user-pool-id ${module.cognito.pool_id} --username ${each.key} --group-name ${lookup(each.value, "group", "read-only")}"
   }
   provisioner local-exec {
-    when    = "destroy"
+    when    = destroy
     command = "aws --region ${var.aws_region} cognito-idp admin-delete-user --user-pool-id ${module.cognito.pool_id} --username ${each.key}"
   }
 }
