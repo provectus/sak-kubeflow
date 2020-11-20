@@ -104,6 +104,14 @@ module cognito {
   zone_id      = module.external_dns.zone_id
   cluster_name = module.kubernetes.cluster_name
   tags         = local.tags
+  invite_template = {
+    email_message = <<EOT
+Your SAK Kubeflow username is {username} and temporary password is {####}.
+Please follow the URL to access Kubeflow: https://kubeflow.${var.domains[0]}
+EOT
+    email_subject = "Your SAK Kubeflow temporary password"
+    sms_message   = "Your SAK Kubeflow username is {username} and temporary password is {####}"
+  }
 }
 
 resource aws_cognito_user_pool_client kubeflow {
