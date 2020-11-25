@@ -55,7 +55,7 @@ This repository is a template of a Kubeflow EKS cluster for your ML projects. Mo
    + Install AWS CLI
 2. Configure your EKS cluster before deployment using the repo as a template
    + Configure `backend.hcl` 
-   + Configure variables in `main.tfvars` 
+   + Configure variables in `main.tf` 
 3. Deploy your Kubeflow Kubernetes EKS cluster with Terraform commands
 4. Commit and push the repository
 5. Manage your Kubernetes cluster with ArgoCD (or configure `kubectl`) and deploy your ML apps to it.  

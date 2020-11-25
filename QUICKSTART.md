@@ -130,7 +130,7 @@ module "sak_kubeflow" {
 }
 ```
 
-In most cases, you'll need to override variables related to the GitHub repository (such as `repository`, `branch`, `owner`) in the `main.tfvars` file.
+In most cases, you'll need to override variables related to the GitHub repository (such as `repository`, `branch`, `owner`) in the `main.tf file.
 
 <br>
 
