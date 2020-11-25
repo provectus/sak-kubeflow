@@ -1,104 +1,90 @@
-# kubeflow-sandbox
-Reference repository for creating EKS clusters with simple Kubeflow installation based on [Swiss-Army-Kube](https://github.com/provectus/swiss-army-kube) collection of modules.
+[![Maintenance](https://img.shields.io/maintenance/yes/2020?style=for-the-badge)]()
+[![Apache2](https://img.shields.io/badge/license-Apache2-green.svg?style=for-the-badge)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Join us on Slack](https://img.shields.io/badge/%20-Join%20us%20on%20Slack-blue?style=for-the-badge&logo=slack&labelColor=5c5c5c)](https://join.slack.com/t/sak-kubeflow/shared_invite/)
 
-For examining the live environment you can check the `examples/simple` folder of that repository
+<!-- Swiss-Army-Kube_README -->
+**[Quickstart](./QUICKSTART.md)** • **[Provectus](https://provectus.com/)**
 
-## Overview
-This Terraform code create AWS EKS cluster and other related things as EC2 scaling groups, IAM roles, etc. All Kubernetes contents are managed by ArgoCD (which also recursively managed by himself,  can read more about that on the ArgoCD documentation page https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#manage-argo-cd-using-argo-cd), generally this repository should be interpreted as an Infrastructure as a Code repository with GitOps paradigm. Each Kubernetes manifests that placed in the `apps` folder will be deployed and future managed by ArgoCD, for that need was created umbrella-application `swiss-army-kube` (that match with the name of source Terraform module collection). For authentication is used an Amazon Cognito User Pools. Is possible to manage Cognito users and groups by Terraform code, but in that case, need to install the AWS CLI tool, because official providers do not support such resources yet.
-## Preparing workspace
-### Install Terrafrom
-Please follow to [official Terraform site](https://learn.hashicorp.com/tutorials/terraform/install-cli)
-### Install AWS-CLI
-Please follow to [official AWS documentations](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
-### Create configuration files
-Need to create two configuration files
-- `backend.hcl`
-- `main.tf`
-#### `backend.hcl`
-``` hcl
-bucket         = "bucket-with-terraform-states"
-key            = "some-key/kubeflow-sandbox"
-region         = "region-where-bucket-placed"
-dynamodb_table = "dynamodb-table-for-locks"
-```
-#### `main.tf`
-``` hcl
-terraform {
-  backend s3 {}
-}
+# Deploy Kubeflow on AWS EKS with Swiss Army Kube using Terraform
 
-module "sak_kubeflow" {
-  source = "git::https://github.com/provectus/sak-kubeflow.git?ref=init"
+Existing ways of deploying an AWS EKS cluster with Kubeflow inside requires using at least two CLI tools (kubectl, kfctl) and restrict further cluster scalability. They make you perform a lot of manual configuration on each step, limit what resources you can add to your cluster after deployment, and don’t offer any CI/CD automation or easy replication of cluster configurations you create.  
 
-  cluster_name = "simple"
+**Swiss Army Kube for Kubeflow (SAKK)** is a free open-source Terraform-based IaC solution that allows you to declaratively set up modular ML-ready Kubeflow EKS clusters with CI/CD GitOps, that can be managed by distributed teams, replicated with a couple of clicks, and add any kind of resources post-deployment. SAKK helps to quickly bring the cluster to production and comfortably scale and manage it as you go. The product is built on top of Terraform (infrastructure as code), ArgoCD (deployment automation & management of all Kubernetes resources), and Cognito (AWS identity provider). 
+    
+We believe that any organization or engineer using ML should be able to focus on their pipelines and applications without having to worry too much about the nitty-gritty of infrastructure deployment. Currently, SAKK is available for the [Amazon EKS](https://aws.amazon.com/eks/) (Elastic Kubernetes Service) cluster only. We plan to expand to other platforms soon.
 
-  owner      = "github-repo-owner"
-  repository = "github-repo-name"
-  branch     = "branch-name"
+Swiss Army Kube for Kubeflow is based on the main [**Swiss Army Kube**](https://github.com/provectus/swiss-army-kube) repository. SAKK is a SAK modification for the Kubeflow EKS setup based on SAK's collection of modules.
 
-  #Main route53 zone id if exist (Change It)
-  mainzoneid = "id-of-route53-zone"
+<br>
 
-  # Name of domains aimed for endpoints
-  domains = ["sandbox.some.domain.local"]
+## Key Features
 
-  # ARNs of users who will have admin permissions.
-  admin_arns = [
-    {
-      userarn  = "arn:aws:iam::<aws-account-id>:user/<username>"
-      username = "<username>"
-      groups   = ["system:masters"]
-    }
-  ]
+### Deploy
 
-  # Email that would be used for LetsEncrypt notifications
-  cert_manager_email = "info@some.domain.local"
+* Provision an AWS EKS cluster with Kubeflow inside in minutes
+* Use existing project structure to set up your ML cluster configuration
+* Configure your deployment with a single `.tf` file
+* Deploy with a couple of Terraform commands
 
-  # An optional list of users for Cognito Pool
-  cognito_users = [
-    {
-      email    = "qa@some.domain.local"
-      username = "qa"
-      group    = "masters"
-    },
-    {
-      email    = "developer@some.domain.local"
-      username = "developer"
-    }
-  ]
+### Manage
 
-  argo_path_prefix = "examples/simple/"
-  argo_apps_dir    = "argocd-applications"
-}
-```
-In most cases, you should also override variables related to the GitHub repository such  a `repository`, `branch` and `owner`
-### Initialize Terraform
-``` bash
+* Add any resources to your cluster before or after deployment
+* Deliver your projects and apps with GitOps CI/CD automation
+* Easily edit, reconfigure, rerun, add or destroy resources  
+* Build your own ML training pipelines in Kubeflow on AWS EKS
+* Manage your cluster with Terraform and Kubernetes CLI or ArgoCD CLI/UI
+
+### Scale
+
+* Replicate your cluster configuration with a couple of clicks   
+* Configure and deploy as many ML clusters as you need fast 
+* Scale deployments by adding new resources as modules
+* Reduce your cloud infrastructure spend with spot instances 
+* Maximize your workload cost-efficiency 
+
+<br>
+
+## How it Works
+
+This repository is a template of a Kubeflow EKS cluster for your ML projects. Modify the `main.tf` file to set up a cluster and deploy it to AWS with Terraform commands. With this simple yet powerful workflow, you can provision as many ML-ready EKS clusters (with different settings of variables, networks, Kubernetes versions, etc.) as you want in no time.
+
+1. Prerequisites
+   + Prepare an AWS account with configured IAM user
+   + Fork and clone this repository
+   + Install Terraform
+   + Install AWS CLI
+2. Configure your EKS cluster before deployment using the repo as a template
+   + Configure `backend.hcl` 
+   + Configure variables in `main.tfvars` 
+3. Deploy your Kubeflow Kubernetes EKS cluster with Terraform commands
+4. Commit and push the repository
+5. Manage your Kubernetes cluster with ArgoCD (or configure `kubectl`) and deploy your ML apps to it.  
+
+<br>
+
+<img src="./images/SAKK-kufeflow.gif" width="1000" height="543" />
+
+<br>
+
+## Get Started
+
+Please visit our [Quickstart](./QUICKSTART.md) to get ready with prerequisites, configure your cluster, and deploy it with Terraform commands:
+
+``` 
 terraform init --backend-config backend.hcl
-```
-This command will download all remote dependency modules
-## Cluster creation
-After completing all configuration steps you can execute Terraform:
-``` bash
 terraform apply
-```
-This command will create all required AWS resources such a IAM roles, policies, S3 buckets, etc.
-Also, a clean EKS would be created, you can access it by updating your local kubefconfig file by the next command:
-``` bash 
 aws --region <region> eks update-kubeconfig --name <cluster-name>
-```
-and after that, you can execute `kubectl` commands.
-## Post actions and accesses
+```  
+After the deployment, manage your Kubernetes cluster with `kubectl` CLI or Argocd CLI/UI, and your AWS cluster with AWS or Terraform CLI. 
 
-As part of Terraform execution was generated a few files, by default in the `apps` folder. So, now to start deploying the actual services to EKS need to add these files to Git and push it to the repository.
+<br>
 
-ArgoCD initially configured to listen to the current repository and when new changes come to `apps` folder they trigger the synchronization process and all objects placed in that folder become created.
+## License
 
-By default, would be created two endpoints for accessing services:
-- ArgoCD  `https://argocd.some.domain.local`
-- Kubeflow  `https://kubeflow.some.domain.local`
+Kubeflow SAK is licensed under the [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0.txt).
 
-For access that URLs need to configure Cognito User Pool with the name which matches with the cluster name.
-### Screenshots
-![kubeflow](images/kubeflow.png)
-![argocd](images/argocd.png)
+<br>
+
+## We Love Your Feedback!
+
+We are always happy to hear your thoughts about SAK Kubeflow. Please join our Slack to chat. 
