@@ -190,7 +190,7 @@ resource null_resource pipeline {
     environment = {
       S3_BUCKET = aws_s3_bucket.data.id
       REGION    = data.aws_region.current.id
-      IMAGE     = data.aws_sagemaker_prebuilt_ecr_image.kmeans.registry_path
+      IMAGE     = "${local.images[data.aws_region.current.id]}/kmeans:1"
       ROLE      = aws_iam_role.pipeline.arn
       OUTPUT    = "${abspath(path.root)}/training_pipeline.yaml"
     }
@@ -208,13 +208,35 @@ resource null_resource dataset {
   }
 }
 
-data aws_sagemaker_prebuilt_ecr_image kmeans {
-  repository_name = "kmeans"
+locals {
+  images = {
+    "us-west-1"      = "632365934929.dkr.ecr.us-west-1.amazonaws.com"
+    "us-west-2"      = "174872318107.dkr.ecr.us-west-2.amazonaws.com"
+    "us-east-1"      = "382416733822.dkr.ecr.us-east-1.amazonaws.com"
+    "us-east-2"      = "404615174143.dkr.ecr.us-east-2.amazonaws.com"
+    "ap-east-1"      = "286214385809.dkr.ecr.ap-east-1.amazonaws.com"
+    "ap-northeast-1" = "351501993468.dkr.ecr.ap-northeast-1.amazonaws.com"
+    "ap-northeast-2" = "835164637446.dkr.ecr.ap-northeast-2.amazonaws.com"
+    "ap-south-1"     = "991648021394.dkr.ecr.ap-south-1.amazonaws.com"
+    "ap-southeast-1" = "475088953585.dkr.ecr.ap-southeast-1.amazonaws.com"
+    "ap-southeast-2" = "712309505854.dkr.ecr.ap-southeast-2.amazonaws.com"
+    "ca-central-1"   = "469771592824.dkr.ecr.ca-central-1.amazonaws.com"
+    "cn-north-1"     = "390948362332.dkr.ecr.cn-north-1.amazonaws.com.cn"
+    "cn-northwest-1" = "387376663083.dkr.ecr.cn-northwest-1.amazonaws.com.cn"
+    "eu-central-1"   = "664544806723.dkr.ecr.eu-central-1.amazonaws.com"
+    "eu-north-1"     = "669576153137.dkr.ecr.eu-north-1.amazonaws.com"
+    "eu-west-1"      = "438346466558.dkr.ecr.eu-west-1.amazonaws.com"
+    "eu-west-2"      = "644912444149.dkr.ecr.eu-west-2.amazonaws.com"
+    "eu-west-3"      = "749696950732.dkr.ecr.eu-west-3.amazonaws.com"
+    "me-south-1"     = "249704162688.dkr.ecr.me-south-1.amazonaws.com"
+    "sa-east-1"      = "855470959533.dkr.ecr.sa-east-1.amazonaws.com"
+    "us-gov-west-1"  = "226302683700.dkr.ecr.us-gov-west-1.amazonaws.com"
+  }
 }
 
 output image {
   description = "An image to use in Kubeflow run"
-  value       = data.aws_sagemaker_prebuilt_ecr_image.kmeans.registry_path
+  value       = "${local.images[data.aws_region.current.id]}/kmeans:1"
 }
 
 output bucket_name {
