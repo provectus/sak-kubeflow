@@ -178,3 +178,30 @@ Your login credentials will be emailed to the address you set up in the `cognito
 To get started with Kubeflow and ArgoCD please refer to the respective official documentation: 
 - [Kubeflow](https://www.kubeflow.org/docs/pipelines/pipelines-quickstart/)
 - [ArgoCD](https://argoproj.github.io/argo-cd/)
+
+## Kubeflow use example
+After successfully login into EKS cluster (via kubectl) and Kubeflow UI and passing all configuration windows you can start using all its functionality. Initially a few demo pipelines available, but you can upload your own with advanced usage of AWS and Kubeflow.
+
+![Login](images/kf-login.png)
+
+Please follow the [official Kubeflow documentation](https://github.com/akartsky/pipelines/tree/documents/samples/contrib/aws-samples) to starting work with AWS. For simplifying this start you can use a demo module with one of the built-in AWS Sagemaker algorithms. For that need to create a folder for managing seaparate Terrafrom state with resourcers related to pipeline executions and add the `main.tf` file with the follow content:
+``` hcl
+module kmeans_mnist {
+  source = "path/to/kmeans-mnist-pipeline/folder/at/root/of/the/project"
+
+  cluster_name = "<your-cluster-name>"
+  username     = "<your-kubeflow-username>"
+}
+```
+After this change need execute Terraform:
+``` bash
+terraform init
+terraform apply
+```
+Terraform will generate `training_pipeline.yaml` file that you can upload to Kubflow through UI.
+
+![Upload](images/kf-upload.png)
+
+Now you have your first pipeline and prepared ServiceAccount that match your Kubeflow username, with the required permissions for AWS, please specify it on creating run.
+
+![Run](images/kf-run.png)
