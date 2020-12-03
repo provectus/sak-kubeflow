@@ -1,16 +1,22 @@
 [![Maintenance](https://img.shields.io/maintenance/yes/2020?style=for-the-badge)]()
 [![Apache2](https://img.shields.io/badge/license-Apache2-green.svg?style=for-the-badge)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Join us on Slack](https://img.shields.io/badge/%20-Join%20us%20on%20Slack-blue?style=for-the-badge&logo=slack&labelColor=5c5c5c)](https://join.slack.com/t/sak-kubeflow/shared_invite/)
+[![Join us on Slack](https://img.shields.io/badge/%20-Join%20us%20on%20Slack-blue?style=for-the-badge&logo=slack&labelColor=5c5c5c)](https://sak-kubeflow.slack.com)
 
 <!-- Swiss-Army-Kube_README -->
 **[Quickstart](./QUICKSTART.md)** • **[Provectus](https://provectus.com/)**
 
 # Deploy Kubeflow on AWS EKS with Swiss Army Kube using Terraform
 
-Existing ways of deploying an AWS EKS cluster with Kubeflow inside requires using at least two CLI tools (kubectl, kfctl) and restrict further cluster scalability. They make you perform a lot of manual configuration on each step, limit what resources you can add to your cluster after deployment, and don’t offer any CI/CD automation or easy replication of cluster configurations you create.  
+Existing ways of deploying an AWS EKS cluster with Kubeflow inside do not offer a blueprint, require using at least two CLI tools (kubectl, kfctl) and restrict further cluster scalability. They make you perform a lot of manual configuration on each step, limit what resources you can add to your cluster after deployment, and don’t offer any CI/CD automation or easy replication of cluster configurations you create.  
 
 **Swiss Army Kube for Kubeflow (SAKK)** is a free open-source Terraform-based IaC solution that allows you to declaratively set up modular ML-ready Kubeflow EKS clusters with CI/CD GitOps, that can be managed by distributed teams, replicated with a couple of clicks, and add any kind of resources post-deployment. SAKK helps to quickly bring the cluster to production and comfortably scale and manage it as you go. The product is built on top of Terraform (infrastructure as code), ArgoCD (deployment automation & management of all Kubernetes resources), and Cognito (AWS identity provider). 
+
+<p align="center">
+<img src="./images/sakk-aws-eks-kubernetes-kubeflow-terraform-cluster.jpg" width="600px" alt="sakk-aws-eks-kubernetes-kubeflow-terraform-cluster"/>&nbsp;
+</p>
     
+**[Go to Quickstart to get started](./QUICKSTART.md)**
+
 We believe that any organization or engineer using ML should be able to focus on their pipelines and applications without having to worry too much about the nitty-gritty of infrastructure deployment. Currently, SAKK is available for the [Amazon EKS](https://aws.amazon.com/eks/) (Elastic Kubernetes Service) cluster only. We plan to expand to other platforms soon.
 
 Swiss Army Kube for Kubeflow is based on the main [**Swiss Army Kube**](https://github.com/provectus/swiss-army-kube) repository. SAKK is a SAK modification for the Kubeflow EKS setup based on SAK's collection of modules.
@@ -81,7 +87,7 @@ After the deployment, manage your Kubernetes cluster with `kubectl` CLI or Argoc
 
 ## License
 
-Kubeflow SAK is licensed under the [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0.txt).
+[Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0.txt).
 
 <br>
 
