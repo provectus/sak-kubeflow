@@ -185,22 +185,22 @@ To get started with Kubeflow and ArgoCD please refer to the respective official 
 <a name="case"></a>
 ## Kubeflow: Example Use Case
 
-Once you successfully logged into the EKS cluster via `kubectl` and accessed Kubeflow UI, you'll have to pass several configuration windows first. Configure your Namespace name to complete the setup:  
+Once you successfully logged into the EKS cluster via `kubectl` and accessed Kubeflow UI, you'll have to pass several configuration windows. Configure your Namespace name to complete the setup:  
 
 <p align="center">
-<img src="./images/kf-login.png" width="600px" alt="kubeflow-login-screenshot"/>&nbsp;
+<img src="./images/kf-login.png" width="900px" alt="kubeflow-login-screenshot"/>&nbsp;
 </p>
 
-After that, you'll see Kubeflow dashboard. It looks like this: 
+After that, you'll see Kubeflow dashboard: 
 
 <p align="center">
-<img src="./images/kubeflow-dashboard-ui.png" width="600px" alt="kubeflow-dashboard-ui"/>&nbsp;
+<img src="./images/kubeflow-dashboard-ui.png" width="900px" alt="kubeflow-dashboard-ui"/>&nbsp;
 </p>
 
 
-To access Kubeflow Pipelines in the UI, click Pipelines. Kubeflow offers a few samples to let you try pipelines quickly. Alternatively, you can upload your own pipelines using advanced features of AWS and Kubeflow.
- 
-To learn about using Kubeflow on AWS, please check the [official Kubeflow documentation](https://www.kubeflow.org/docs/aws/). You can start by trying a demo module with one of the built-in AWS SageMaker algorithms. To do so, create a folder for managing separate Terraform states with resources related to pipeline executions and add the `main.tf` file with the following content:
+To access Kubeflow Pipelines in the UI, click Pipelines. Kubeflow offers a few samples to let you try pipelines quickly. To learn about using Kubeflow on AWS, please check the [official Kubeflow documentation](https://www.kubeflow.org/docs/aws/). 
+
+Alternatively, you can upload your own pipelines using advanced features of AWS and Kubeflow. You can start by trying a demo module with one of the built-in AWS SageMaker algorithms. To do so, create a folder for managing separate Terraform states with resources related to pipeline executions and add the `main.tf` file with the following content:
 
 ``` hcl
 module kmeans_mnist {
@@ -218,13 +218,13 @@ terraform init
 terraform apply
 ```
 
-Terraform will generate a `training_pipeline.yaml` file. Upload it to Kubflow through UI:
+Terraform will generate a `training_pipeline.yaml` file. Upload it to Kubflow through the UI:
 
 <p align="center">
 <img src="./images/kf-upload.png" width="600px" alt="kubeflow-upload-pipeline"/>&nbsp;
 </p>
 
-Now that you have your first pipeline and prepared a Kubernetes service account that matches your Kubeflow username with the required permissions for AWS, please specify it on creating a run:
+Now that you have your first pipeline and a prepared Kubernetes service account that matches your Kubeflow username with the required permissions for AWS, specify them in the form to start a run:
 
 <p align="center">
 <img src="./images/kf-run.png" width="600px" alt="kubeflow-run"/>&nbsp;
