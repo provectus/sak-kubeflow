@@ -36,4 +36,4 @@ jobs:
           fail_on_error: "true" # Optional. Fail action if errors are found
           filter_mode: "nofilter" # Optional. Check all files, not just the diff
           level: "error"
-          flags: "--module -c ../../.tflint.hcl -fail-on-error=true" # Optional. Add custom tflint flags
+          flags: "--module -c ../../.tflint.hcl --fail-on-error=true" # Optional. Add custom tflint flags
