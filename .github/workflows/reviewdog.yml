@@ -32,8 +32,8 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
           working_directory: "examples/simple" # Optional. Change working directory
-          reporter: github-pr-review # Optional. Change reporter
+          reporter: github-pr-check # Optional. Change reporter
           fail_on_error: "true" # Optional. Fail action if errors are found
           filter_mode: "nofilter" # Optional. Check all files, not just the diff
-          level: "warning"
-          flags: "--module --loglevel=error -c ../../.tflint.hcl" # Optional. Add custom tflint flags
+          level: "error"
+          flags: "--module -c ../../.tflint.hcl" # Optional. Add custom tflint flags
