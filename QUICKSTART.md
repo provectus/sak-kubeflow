@@ -133,7 +133,7 @@ module "sak_kubeflow" {
 }
 ```
 
-In most cases, you'll also need to override variables related to the GitHub repository (`repository`, `branch`, `owner`) in the `main.tf`. 
+In most cases, you'll need to override variables related to the GitHub repository (`repository`, `branch`, `owner`) in the `main.tf`. 
 
 <br>
 
@@ -171,18 +171,23 @@ Note that ArgoCD is pre-configured to track changes of the current repository. W
 
 ### Access Kubeflow and ArgoCD UI
 
-By default, two endpoints for accessing services will be created:
-- ArgoCD   `https://argocd.some.domain.local`
+Now you have your cluster deployed and ready for work. During the deployment process, two service access endpoints were created in accordance with your `domains` variable settings in the `main.tf` file:
+
 - Kubeflow `https://kubeflow.some.domain.local`
+- ArgoCD   `https://argocd.some.domain.local`
 
-To access these URLs, configure Cognito User Pool with the name that matches your cluster name.
-Your login credentials will be emailed to the address you set up in the `cognito_users` in `main.tf`. 
+To access these URLs, check the email you provided in the `domains` variable for access credentials and use them to log in. Check out this video to see the process of logging into the Kubeflow UI after cluster deployment (Vimeo):
+[Access Kubeflow UI after Cluster Deployment](https://vimeo.com/491622856)
 
-To get started with Kubeflow and ArgoCD please refer to the respective official documentation: 
+
+To learn more about Kubeflow and ArgoCD, you can check out their respective official documentation: 
 - [Kubeflow](https://www.kubeflow.org/docs/pipelines/pipelines-quickstart/)
 - [ArgoCD](https://argoproj.github.io/argo-cd/)
 
+<br>
+
 <a name="case"></a>
+
 ## Kubeflow: Example Use Case
 
 Once you have successfully logged into your Amazon EKS cluster via `kubectl`, access Kubeflow UI, pass all the configuration screens, and you’ll see the Kubeflow dashboard: 
@@ -214,7 +219,11 @@ terraform init
 terraform apply
 ```
 
-Terraform will generate a `training_pipeline.yaml` file and create a Kubernetes service account that matches your Kubeflow username and has all the required permissions for AWS for running the pipeline.
+Terraform will generate a `training_pipeline.yaml` file and create a Kubernetes service account that matches your Kubeflow username and has all the required permissions for AWS for running the pipeline. 
+
+The next 2 steps show how to start using Kubeflow by uploading and running the pipeline. You can check out this video (Vimeo) to see the process (how to upload a pipeline via Kubeflow interface, create an experiment, and start a run): 
+[Start Using Kubeflow on Amazon EKS](https://vimeo.com/491627420)
+
 
 3. Upload the training pipeline to Kubflow through the Pipelines section of Kubeflow UI:
 
@@ -233,6 +242,6 @@ That's it! Now you have a pipeline executing in Kubeflow.
 Any questions? Ask us on Slack: 
 
 
-[![SAKK on Slack](https://img.shields.io/badge/%20-Join%20us%20on%20Slack-blue?style=for-the-badge&logo=slack&labelColor=5c5c5c)]( https://sak-kubeflow.slack.com)
+[![Join SAKK on Slack](https://img.shields.io/badge/%20-Join%20us%20on%20Slack-blue?style=for-the-badge&logo=slack&labelColor=5c5c5c)]( https://sak-kubeflow.slack.com)
 
 <a href="#top">Back to top</a>

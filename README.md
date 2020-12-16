@@ -67,11 +67,10 @@ This repository is a template of a Kubeflow EKS cluster for your ML projects. Mo
 4. Commit and push the repository
 5. Manage your Kubernetes cluster with ArgoCD (or configure `kubectl`) and deploy your ML apps to it.  
 
-<br>
+You can check out this video to see the cluster configuration and deployment process: 
+[SAKK demo: cluster configuration and deployment](https://asciinema.org/a/vdi54kQ0gjuWqcDU9UsNuwo1Z)
+The next video shows the deployment of an example located in the `sak-kubeflow/examples/simple` directory: [SAKK demo: example deployment](https://github.com/provectus/sak-kubeflow/blob/init/examples/simple/main.tf)
 
-<img src="./images/SAKK-kufeflow.gif" width="1000" height="543" />
-
-<br>
 
 ## Who is SAKK For
 
@@ -98,6 +97,8 @@ After the deployment, you'll have a Kubernetes cluster with Kubeflow and ArgoCD 
 
 To get involved, please check out our [CONTRIBUTING.md](./CONTRIBUTING.md).
 
+<br>
+
 ## License
 
 [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0.txt).
@@ -107,6 +108,9 @@ To get involved, please check out our [CONTRIBUTING.md](./CONTRIBUTING.md).
 ## We Love Your Feedback!
 
 We are always happy to hear your thoughts and questions about SAKK. Please join our Slack to discuss:
+
+<br>
+
 [![Join us on Slack](https://img.shields.io/badge/%20-Join%20us%20on%20Slack-blue?style=for-the-badge&logo=slack&labelColor=5c5c5c)](https://sak-kubeflow.slack.com) 
 
 <a href="#top">Back to top</a>
