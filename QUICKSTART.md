@@ -205,3 +205,4 @@ Terraform will generate `training_pipeline.yaml` file that you can upload to Kub
 Now you have your first pipeline and prepared ServiceAccount that match your Kubeflow username, with the required permissions for AWS, please specify it on creating run.
 
 ![Run](images/kf-run.png)
+

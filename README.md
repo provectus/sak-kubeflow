@@ -71,7 +71,7 @@ This repository is a template of a Kubeflow EKS cluster for your ML projects. Mo
 Please visit our [Quickstart](./QUICKSTART.md) to get ready with prerequisites, configure your cluster, and deploy it with Terraform commands:
 
 ``` 
-terraform init --backend-config backend.hcl
+terraform init
 terraform apply
 aws --region <region> eks update-kubeconfig --name <cluster-name>
 ```  
