@@ -69,13 +69,18 @@ This repository is a template of a Kubeflow EKS cluster for your ML projects. Mo
 
 <br>
 
-<img src="./images/SAKK-kufeflow.gif" width="1000" height="543" />
+To see the cluster configuration and deployment process, you can check out this demo video: 
+[Cluster configuration and deployment](https://asciinema.org/a/vdi54kQ0gjuWqcDU9UsNuwo1Z)
+To see the deployment of an example located in the `sak-kubeflow/examples/simple` directory, you can check out this demo video: 
+[Example deployment](https://github.com/provectus/sak-kubeflow/blob/init/examples/simple/main.tf)
 
 <br>
 
 ## Who is SAKK For
 
 SAKK is great for enterprises that work on ML/AI projects and want to deploy and manage Kubeflow clusters on AWS EKS in a declarative, modular, repeatable, GitOps way.
+
+<br>
 
 ## Get Started
 
@@ -98,6 +103,8 @@ After the deployment, you'll have a Kubernetes cluster with Kubeflow and ArgoCD 
 
 To get involved, please check out our [CONTRIBUTING.md](./CONTRIBUTING.md).
 
+<br>
+
 ## License
 
 [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0.txt).
@@ -107,6 +114,9 @@ To get involved, please check out our [CONTRIBUTING.md](./CONTRIBUTING.md).
 ## We Love Your Feedback!
 
 We are always happy to hear your thoughts and questions about SAKK. Please join our Slack to discuss:
+
+<br>
+
 [![Join us on Slack](https://img.shields.io/badge/%20-Join%20us%20on%20Slack-blue?style=for-the-badge&logo=slack&labelColor=5c5c5c)](https://sak-kubeflow.slack.com) 
 
 <a href="#top">Back to top</a>
