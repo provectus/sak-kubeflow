@@ -208,6 +208,10 @@ resource null_resource dataset {
   }
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/kfp-example
 locals {
   images = {
     "us-west-1"      = "632365934929.dkr.ecr.us-west-1.amazonaws.com"

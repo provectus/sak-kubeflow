@@ -1,6 +1,6 @@
 # Quickstart: Deploy Kubeflow on AWS EKS with Terraform
 
-[![Join us on Slack](https://img.shields.io/badge/%20-Join%20us%20on%20Slack-blue?style=for-the-badge&logo=slack&labelColor=5c5c5c)](https://join.slack.com/t/swiss-army-kube)
+[![Join us on Slack](https://img.shields.io/badge/%20-Join%20us%20on%20Slack-blue?style=for-the-badge&logo=slack&labelColor=5c5c5c)]( https://sak-kubeflow.slack.com)
 
 <!-- Swiss-Army-Kube-Kubeflow_README -->
 **[README](./README.md)** • **[Swiss Army Kube (umbrella repository)](https://github.com/provectus/swiss-army-kube)** • **[Provectus](https://provectus.com/)**
@@ -18,6 +18,7 @@ This repository is a template of a Kubeflow EKS cluster for your ML projects. Mo
 2. [Cluster Configuration](#clusterconfig)
 3. [Cluster Deployment](#clusterserve)
 4. [Cluster Access and Management](#clusteraccess)
+4. [Kubeflow: Example Use Case](#case)
 
 <br>
 
@@ -65,7 +66,9 @@ dynamodb_table = "dynamodb-table-for-locks"
 ```
 
 ### Configure `main.tf`
-The minimal required set of variables you need to configure your Kubeflow EKS cluster is shown in the example below and consists of the following: 
+The minimal required set of variables you need to configure for your Kubeflow EKS cluster is the following: 
+
+- `cluster_name`
 
 - `mainzoneid`
 
@@ -130,7 +133,7 @@ module "sak_kubeflow" {
 }
 ```
 
-In most cases, you'll need to override variables related to the GitHub repository (such as `repository`, `branch`, `owner`) in the `main.tf file.
+In most cases, you'll also need to override variables related to the GitHub repository (`repository`, `branch`, `owner`) in the `main.tf`. 
 
 <br>
 
@@ -140,20 +143,20 @@ In most cases, you'll need to override variables related to the GitHub repositor
 Deploy your configured cluster with the following terraform commands: 
 
 ``` bash
-terraform init --backend-config backend.hcl
+terraform init 
 terraform apply
 aws --region <region> eks update-kubeconfig --name <cluster-name>
 ```
 
 What these commands do: 
-- Initialize Terraform with the backend file and download all remote dependencies 
+- Initialize Terraform and download all remote dependencies 
 - Create a cluster and a clean EKS with all required AWS resources (IAM roles, ASGs, S3 buckets, etc.) 
 - Update your local `kubeconfig` file to access your newly created EKS cluster in the configured context 
  
 
 After that, you can manage your Kubernetes cluster with either ArgoCD CLI/UI or `kubectl`. 
 
-To use `kubectl` Kubernetes CLI for cluster management, install and configure it using this [official guide](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
+To use `kubectl` (Kubernetes CLI for cluster management), install and configure it using this [official guide](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
 
 <br>
 
@@ -179,12 +182,22 @@ To get started with Kubeflow and ArgoCD please refer to the respective official 
 - [Kubeflow](https://www.kubeflow.org/docs/pipelines/pipelines-quickstart/)
 - [ArgoCD](https://argoproj.github.io/argo-cd/)
 
-## Kubeflow use example
-After successfully login into EKS cluster (via kubectl) and Kubeflow UI and passing all configuration windows you can start using all its functionality. Initially a few demo pipelines available, but you can upload your own with advanced usage of AWS and Kubeflow.
+<a name="case"></a>
+## Kubeflow: Example Use Case
 
-![Login](images/kf-login.png)
+Once you have successfully logged into your Amazon EKS cluster via `kubectl`, access Kubeflow UI, pass all the configuration screens, and you’ll see the Kubeflow dashboard: 
 
-Please follow the [official Kubeflow documentation](https://github.com/akartsky/pipelines/tree/documents/samples/contrib/aws-samples) to starting work with AWS. For simplifying this start you can use a demo module with one of the built-in AWS Sagemaker algorithms. For that need to create a folder for managing seaparate Terrafrom state with resourcers related to pipeline executions and add the `main.tf` file with the follow content:
+<p align="center">
+<img src="./images/kubeflow-dashboard-ui.png" width="900px" alt="kubeflow-dashboard-ui"/>&nbsp;
+</p>
+
+
+To access Kubeflow Pipelines in the UI, click Pipelines. Kubeflow offers a few samples to let you try pipelines quickly. To learn about using Kubeflow on AWS, please check the [official Kubeflow documentation](https://www.kubeflow.org/docs/aws/). 
+
+Alternatively, you can upload your own pipelines using advanced features of AWS and Kubeflow. For instance, let's upload the `kmeans_mnist` [demo module](https://github.com/kubeflow/pipelines/tree/master/samples/contrib/aws-samples/simple_train_pipeline) from the Kubeflow repository with one of the built-in AWS SageMaker algorithms - `kmeans-mnist-pipeline`. 
+
+1. Create a folder for managing separate Terraform states (with resources related to pipeline executions) and add a `main.tf` file with this code:
+
 ``` hcl
 module kmeans_mnist {
   source = "path/to/kmeans-mnist-pipeline/folder/at/root/of/the/project"
@@ -193,16 +206,33 @@ module kmeans_mnist {
   username     = "<your-kubeflow-username>"
 }
 ```
-After this change need execute Terraform:
+
+2. Run Terraform:
+
 ``` bash
 terraform init
 terraform apply
 ```
-Terraform will generate `training_pipeline.yaml` file that you can upload to Kubflow through UI.
 
-![Upload](images/kf-upload.png)
+Terraform will generate a `training_pipeline.yaml` file and create a Kubernetes service account that matches your Kubeflow username and has all the required permissions for AWS for running the pipeline.
 
-Now you have your first pipeline and prepared ServiceAccount that match your Kubeflow username, with the required permissions for AWS, please specify it on creating run.
+3. Upload the training pipeline to Kubflow through the Pipelines section of Kubeflow UI:
 
-![Run](images/kf-run.png)
+<p align="center">
+<img src="./images/kf-upload.png" width="600px" alt="kubeflow-upload-pipeline"/>&nbsp;
+</p>
 
+4. Now that you have your first pipeline and a prepared Kubernetes service account, specify them in the form to start a run:
+
+<p align="center">
+<img src="./images/kf-run.png" width="600px" alt="kubeflow-run"/>&nbsp;
+</p>
+
+That's it! Now you have a pipeline executing in Kubeflow.
+
+Any questions? Ask us on Slack: 
+
+
+[![SAKK on Slack](https://img.shields.io/badge/%20-Join%20us%20on%20Slack-blue?style=for-the-badge&logo=slack&labelColor=5c5c5c)]( https://sak-kubeflow.slack.com)
+
+<a href="#top">Back to top</a>
