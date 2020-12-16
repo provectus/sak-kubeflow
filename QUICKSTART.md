@@ -177,7 +177,7 @@ Now you have your cluster deployed and ready for work. During the deployment pro
 - ArgoCD   `https://argocd.some.domain.local`
 
 To access these URLs, check the email you provided in the `domains` variable for access credentials and use them to log in. Check out this video to see the process of logging into the Kubeflow UI after cluster deployment (Vimeo):
-[Access Kubeflow UI after Cluster Deployment](https://vimeo.com/491622856)
+- [Access Kubeflow UI after Cluster Deployment](https://vimeo.com/491622856)
 
 
 To learn more about Kubeflow and ArgoCD, you can check out their respective official documentation: 
@@ -221,8 +221,8 @@ terraform apply
 
 Terraform will generate a `training_pipeline.yaml` file and create a Kubernetes service account that matches your Kubeflow username and has all the required permissions for AWS for running the pipeline. 
 
-The next 2 steps show how to start using Kubeflow by uploading and running the pipeline. You can check out this video (Vimeo) to see the process (how to upload a pipeline via Kubeflow interface, create an experiment, and start a run): 
-[Start Using Kubeflow on Amazon EKS](https://vimeo.com/491627420)
+The next two steps show how to start using Kubeflow by uploading and running the pipeline. You can check out this video (Vimeo) to see the process (how to upload a pipeline via Kubeflow interface, create an experiment, and start a run): 
+- [Start Using Kubeflow on Amazon EKS](https://vimeo.com/491627420)
 
 
 3. Upload the training pipeline to Kubflow through the Pipelines section of Kubeflow UI:
