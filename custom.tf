@@ -142,7 +142,7 @@ resource aws_cognito_user_pool_client argocd {
 ### will be executed locally, so aws-cli should present on the local machine
 ### this is an inelegant way for managing users, suitable only for demo purpose
 
-resource aws_cognito_user_group this {
+resource "aws_cognito_user_group" "this" {
   for_each = toset(distinct(values(
     {
       for k, v in var.cognito_users :
@@ -153,20 +153,21 @@ resource aws_cognito_user_group this {
   user_pool_id = module.cognito.pool_id
 }
 
-resource null_resource cognito_users {
-  depends_on = [aws_cognito_user_group.this]
+resource "null_resource" "cognito_users" {
+  depends_on = [module.cognito.pool_id, aws_cognito_user_group.this]
   for_each = {
     for k, v in var.cognito_users :
-    v.username => v
+    format("%s:%s:%s", var.aws_region, module.cognito.pool_id, v.username) => v
+
   }
-  provisioner local-exec {
-    command = "aws --region ${var.aws_region} cognito-idp admin-create-user --user-pool-id ${module.cognito.pool_id} --username ${each.key} --user-attributes Name=email,Value=${each.value.email}"
+  provisioner "local-exec" {
+    command = "aws --region ${element(split(":", each.key), 0)} cognito-idp admin-create-user --user-pool-id ${element(split(":", each.key), 1)} --username ${element(split(":", each.key), 2)} --user-attributes Name=email,Value=${each.value.email}"
   }
-  provisioner local-exec {
-    command = "aws --region ${var.aws_region} cognito-idp admin-add-user-to-group --user-pool-id ${module.cognito.pool_id} --username ${each.key} --group-name ${lookup(each.value, "group", "read-only")}"
+  provisioner "local-exec" {
+    command = "aws --region ${element(split(":", each.key), 0)} cognito-idp admin-add-user-to-group --user-pool-id ${element(split(":", each.key), 1)} --username ${element(split(":", each.key), 2)} --group-name ${lookup(each.value, "group", "read-only")}"
   }
-  provisioner local-exec {
+  provisioner "local-exec" {
     when    = destroy
-    command = "aws --region ${var.aws_region} cognito-idp admin-delete-user --user-pool-id ${module.cognito.pool_id} --username ${each.key}"
+    command = "aws --region ${element(split(":", each.key), 0)} cognito-idp admin-delete-user --user-pool-id ${element(split(":", each.key), 1)} --username ${element(split(":", each.key), 2)}"
   }
 }
