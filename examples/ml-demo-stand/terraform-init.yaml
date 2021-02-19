@@ -1,0 +1,49 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description:  Initial infrastructute for terraform
+
+Parameters:
+  Project:
+    Type: String
+    Default: ml-demo-stand
+
+Resources:
+  TerraformState:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      AccessControl: Private
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      Tags:
+        - Key: "Project"
+          Value: !Ref Project
+      VersioningConfiguration:
+        Status: Enabled
+
+  LockTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        -
+          AttributeName: "LockID"
+          AttributeType: "S"
+      KeySchema:
+        -
+          AttributeName: "LockID"
+          KeyType: "HASH"
+      BillingMode: PAY_PER_REQUEST
+
+Outputs:
+  TerraformStateBucket:
+    Value: !Ref TerraformState
+    Description: Bucket for the terraform state
+    Export:
+      Name: !Sub 'terraform-s3-states-${Project}'
+  LockTable:
+    Value: !Ref LockTable
+    Description: DynamoDB table for the terraform state
+    Export:
+      Name: !Sub 'terraform-dynamodb-states-${Project}'
+
