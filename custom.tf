@@ -28,7 +28,7 @@ module argocd {
     "alb.ingress.kubernetes.io/scheme"          = "internet-facing"
     "alb.ingress.kubernetes.io/certificate-arn" = module.acm.this_acm_certificate_arn
     "alb.ingress.kubernetes.io/listen-ports" = jsonencode(
-      [{ "HTTPS" = 443 }]
+      [{ HTTPS = 443 }]
     )
   }
   path_prefix = var.argo_path_prefix
@@ -48,7 +48,7 @@ module kubeflow {
       "UserPoolDomain"   = module.cognito.domain
     })
     "alb.ingress.kubernetes.io/listen-ports" = jsonencode(
-      [{ "HTTPS" = 443 }]
+      [{ HTTPS = 443 }]
     )
   }
   domain = "kubeflow.${var.domains[0]}"
@@ -73,16 +73,6 @@ module cert_manager {
   project           = var.project
   zone_id           = module.external_dns.zone_id
   email             = var.cert_manager_email
-  argocd            = module.argocd.state
-}
-
-module alb_ingress {
-  module_depends_on = [module.kubernetes]
-  source            = "git::https://github.com/provectus/swiss-army-kube.git//modules/ingress/aws-alb?ref=feature/argocd"
-  cluster_name      = module.kubernetes.cluster_name
-  domains           = var.domains
-  vpc_id            = module.network.vpc_id
-  certificates_arns = [module.acm.this_acm_certificate_arn]
   argocd            = module.argocd.state
 }
 
@@ -136,7 +126,17 @@ resource aws_cognito_user_pool_client argocd {
   generate_secret                      = true
 }
 
-
+module "alb_ingress_controller" {
+  source           = "./modules/alb-ingress-controller"
+  cluster_name     = module.kubernetes.cluster_name
+  argocd           = module.argocd.state
+  vpc_id           = module.network.vpc_id
+  region           = var.aws_region
+  branch           = var.branch
+  owner            = var.owner
+  repository       = var.repository
+  argo_path_prefix = var.argo_path_prefix
+}
 
 ### Optional step of populating Cognito User Pool
 ### will be executed locally, so aws-cli should present on the local machine
