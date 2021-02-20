@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 # Generates backend.hcl based on the bootstrapped terraform resources
 
@@ -24,12 +24,11 @@ region="${AWS_DEFAULT_REGION}"
 lock_table=$(echo $stack_description |
   jq -r '.Stacks[0].Outputs[] | select(.OutputKey == "LockTable") | .OutputValue')
 
-cat <<EOT > backend.hcl
+cat <<EOT | tee backend.hcl
 bucket         = "${bucket_name}"
 key            = "${bucket_key}"
 region         = "${region}"
 dynamodb_table = "${lock_table}"
 EOT
 
-cat backend.hcl
 _exit 0 SUCCESS: Generating of the backend.hcl was completed

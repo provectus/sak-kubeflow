@@ -2,6 +2,8 @@
 *.iml
 .idea
 
+.envrc
+
 *.hcl
 !.tflint.hcl
 *.tfvars
