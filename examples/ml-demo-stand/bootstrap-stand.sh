@@ -60,10 +60,13 @@ export zones=${zones:-$default_zones}
 
 envsubst <main.tf.tpl >main.tf
 
-echo The next steps:
 echo
-echo 1. Run this command to bootstrap the terraform infrastructure
-echo PROJECT=${project} AWS_DEFAULT_REGION=${region} make init-bootstrap-terraform-resources
+echo "======================================================================="
+echo "****  The next steps:"
 echo
-echo "2. Run the 'terraform apply' command to complete the infrastructure creation"
+echo "1. Run this command to bootstrap the terraform infrastructure"
+echo "PROJECT=${project} AWS_DEFAULT_REGION=${region} make init-bootstrap-terraform-resources"
 echo
+echo "2. Then run the 'terraform apply' command to complete the infrastructure creation"
+echo
+echo "======================================================================="

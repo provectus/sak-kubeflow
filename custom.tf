@@ -153,21 +153,24 @@ resource "aws_cognito_user_group" "this" {
   user_pool_id = module.cognito.pool_id
 }
 
-resource "null_resource" "cognito_users" {
-  depends_on = [module.cognito.pool_id, aws_cognito_user_group.this]
-  for_each = {
-    for k, v in var.cognito_users :
-    format("%s:%s:%s", var.aws_region, module.cognito.pool_id, v.username) => v
+# Uncomment the section below and run terraform apply again after the
+# installation to create the cognito users.
 
-  }
-  provisioner "local-exec" {
-    command = "aws --region ${element(split(":", each.key), 0)} cognito-idp admin-create-user --user-pool-id ${element(split(":", each.key), 1)} --username ${element(split(":", each.key), 2)} --user-attributes Name=email,Value=${each.value.email}"
-  }
-  provisioner "local-exec" {
-    command = "aws --region ${element(split(":", each.key), 0)} cognito-idp admin-add-user-to-group --user-pool-id ${element(split(":", each.key), 1)} --username ${element(split(":", each.key), 2)} --group-name ${lookup(each.value, "group", "read-only")}"
-  }
-  provisioner "local-exec" {
-    when    = destroy
-    command = "aws --region ${element(split(":", each.key), 0)} cognito-idp admin-delete-user --user-pool-id ${element(split(":", each.key), 1)} --username ${element(split(":", each.key), 2)}"
-  }
-}
+//resource "null_resource" "cognito_users" {
+//  depends_on = [module.cognito.pool_id, aws_cognito_user_group.this]
+//  for_each = {
+//    for k, v in var.cognito_users :
+//    format("%s:%s:%s", var.aws_region, module.cognito.pool_id, v.username) => v
+//
+//  }
+//  provisioner "local-exec" {
+//    command = "aws --region ${element(split(":", each.key), 0)} cognito-idp admin-create-user --user-pool-id ${element(split(":", each.key), 1)} --username ${element(split(":", each.key), 2)} --user-attributes Name=email,Value=${each.value.email}"
+//  }
+//  provisioner "local-exec" {
+//    command = "aws --region ${element(split(":", each.key), 0)} cognito-idp admin-add-user-to-group --user-pool-id ${element(split(":", each.key), 1)} --username ${element(split(":", each.key), 2)} --group-name ${lookup(each.value, "group", "read-only")}"
+//  }
+//  provisioner "local-exec" {
+//    when    = destroy
+//    command = "aws --region ${element(split(":", each.key), 0)} cognito-idp admin-delete-user --user-pool-id ${element(split(":", each.key), 1)} --username ${element(split(":", each.key), 2)}"
+//  }
+//}
