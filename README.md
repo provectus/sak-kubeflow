@@ -1,4 +1,4 @@
-[![Maintenance](https://img.shields.io/maintenance/yes/2020?style=for-the-badge)]()
+[![Maintenance](https://img.shields.io/maintenance/yes/2021?style=for-the-badge)]()
 [![Apache2](https://img.shields.io/badge/license-Apache2-green.svg?style=for-the-badge)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Join us on Slack](https://img.shields.io/badge/%20-Join%20us%20on%20Slack-blue?style=for-the-badge&logo=slack&labelColor=5c5c5c)](https://sak-kubeflow.slack.com)
 
