@@ -1,17 +1,18 @@
 module "sak_kubeflow" {
   source = "../.."
 
-  cluster_name = "testcognito"
+  cluster_name = "kubeflow"
 
+  #Enter your repository and branch
   owner      = "provectus"
   repository = "sak-kubeflow"
-  branch     = "test"
+  branch     = "master"
 
-  #Main route53 zone id if exist (Change It)
-  mainzoneid = "Z04917561CQAI9UAF27D6"
+  #Main route53 zone id (Change It)
+  mainzoneid = ""
 
   # Name of domains (create route53 zone and ingress). Set as array, first main ingress fqdn ["example.com", "example.io"]
-  domains = ["testcognito.sak.ninja"]
+  domains = ["kubeflow.example.com"]
 
   # ARNs of users which would have admin permissions. (Change It)
   admin_arns = []
@@ -23,12 +24,12 @@ module "sak_kubeflow" {
   # ]
 
   # Email that would be used for LetsEncrypt notifications
-  cert_manager_email = "dkharlamov@provectus.com"
+  cert_manager_email = "xxxx@example.com"
 
   cognito_users = [
     {
-      email    = "dkharlamov@provectus.com"
-      username = "dkharlamov"
+      email    = "xxxx@example.com"
+      username = "xxxxx"
       group    = "administrators"
     }
   ]

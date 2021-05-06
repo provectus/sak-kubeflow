@@ -1,7 +1,7 @@
 variable branch {
   type        = string
   description = "describe your variable"
-  default     = "test"
+  default     = "master"
 }
 
 variable owner {
@@ -24,7 +24,7 @@ variable aws_region {
 # Name of EKS cluster (Not use underscore in naming. S3 backet name issue)
 variable cluster_name {
   description = "Name of cluster"
-  default     = "test"
+  default     = "kubeflow"
 }
 
 variable availability_zones {
