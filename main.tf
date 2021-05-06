@@ -14,7 +14,7 @@ data aws_eks_cluster_auth cluster {
 }
 
 module network {
-  source             = "git::https://github.com/provectus/swiss-army-kube.git//modules/network?ref=master"
+  source             = "git::https://github.com/provectus/swiss-army-kube.git//modules/network?ref=feature/argocd"
   availability_zones = var.availability_zones
   environment        = var.environment
   project            = var.project
