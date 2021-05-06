@@ -78,12 +78,12 @@ module cert_manager {
 
 module alb_ingress {
   module_depends_on = [module.kubernetes]
-  source            = "git::https://github.com/provectus/swiss-army-kube.git//modules/ingress/aws-alb?ref=feature/argocd"
+  source            = "github.com/provectus/sak-alb-controller"
   cluster_name      = module.kubernetes.cluster_name
+  cluster_oidc_url  = module.kubernetes.cluster_oidc_url
   domains           = var.domains
   vpc_id            = module.network.vpc_id
   certificates_arns = [module.acm.this_acm_certificate_arn]
-  argocd            = module.argocd.state
 }
 
 module external_dns {
