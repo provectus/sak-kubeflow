@@ -27,7 +27,7 @@ module kubernetes {
   environment        = var.environment
   project            = var.project
   cluster_name       = var.cluster_name
-  cluster_version    = "1.15"
+  cluster_version    = "1.16"
   vpc_id             = module.network.vpc_id
   subnets            = module.network.private_subnets
   admin_arns         = var.admin_arns

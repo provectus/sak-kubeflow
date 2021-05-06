@@ -1,7 +1,7 @@
 variable branch {
   type        = string
   description = "describe your variable"
-  default     = "init"
+  default     = "master"
 }
 
 variable owner {
@@ -18,19 +18,19 @@ variable repository {
 
 variable aws_region {
   description = "Name the aws region (us-central-1, us-west-2 and etc.)"
-  default     = "us-east-2"
+  default     = "us-west-2"
 }
 
 # Name of EKS cluster (Not use underscore in naming. S3 backet name issue)
 variable cluster_name {
   description = "Name of cluster"
-  default     = "sandbox"
+  default     = "kubeflow"
 }
 
 variable availability_zones {
   type        = list(string)
   description = "List of use avilability_zones"
-  default     = ["us-east-2a", "us-east-2b"]
+  default     = ["us-west-2a", "us-west-2b"]
 }
 
 #Deploy environment name
