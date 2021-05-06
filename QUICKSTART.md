@@ -13,8 +13,8 @@ This repository is a template of a Kubeflow EKS cluster for your ML projects. Mo
 
 1. [Prerequisites](#prereqs)
     + [AWS Account and IAM user](#awsacc)
-    + [AWS CLI](#awscli) 
-    + [Terraform ](#terraform) 
+    + [AWS CLI](#awscli)
+    + [Terraform ](#terraform)
 2. [Cluster Configuration](#clusterconfig)
 3. [Cluster Deployment](#clusterserve)
 4. [Cluster Access and Management](#clusteraccess)
@@ -25,7 +25,7 @@ This repository is a template of a Kubeflow EKS cluster for your ML projects. Mo
 <a name="prereqs"></a>
 ## 1. Install Prerequisites
 
-First, fork and clone this repository. Next, create/install the following prerequisites. 
+First, fork and clone this repository. Next, create/install the following prerequisites.
 
 <a name="awsacc"></a>
 ### Create an AWS Account and IAM User
@@ -35,7 +35,7 @@ First, fork and clone this repository. Next, create/install the following prereq
 <a name="awscli"></a>
 ### Install AWS CLI
 
-- Install AWS CLI using this [official guide](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html). 
+- Install AWS CLI using this [official guide](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html).
 
 <a name="terraform"></a>
 ### Install Terrafrom
@@ -45,18 +45,18 @@ First, fork and clone this repository. Next, create/install the following prereq
 <br>
 
 <a name="clusterconfig"></a>
-## 2. Configure Your Cluster 
+## 2. Configure Your Cluster
 
-To set up your cluster, modify the following configuration files as you need: 
+To set up your cluster, modify the following configuration files as you need:
 
 - `backend.hcl`
 - `main.tf`
 
 ### Configure `backend.hcl`
 
-`backend.hcl` is a backend configuration file that stores the Terraform state. 
+`backend.hcl` is a backend configuration file that stores the Terraform state.
 
-Example configuration of `backend.hcl`: 
+Example configuration of `backend.hcl`:
 
 ``` hcl
 bucket         = "bucket-with-terraform-states"
@@ -66,7 +66,7 @@ dynamodb_table = "dynamodb-table-for-locks"
 ```
 
 ### Configure `main.tf`
-The minimal required set of variables you need to configure for your Kubeflow EKS cluster is the following: 
+The minimal required set of variables you need to configure for your Kubeflow EKS cluster is the following:
 
 - `cluster_name`
 
@@ -81,7 +81,7 @@ The minimal required set of variables you need to configure for your Kubeflow EK
 - `cognito_users`
 
 
-Exaple configuration of `main.tf`: 
+Exaple configuration of `main.tf`:
 
 ``` hcl
 terraform {
@@ -133,39 +133,39 @@ module "sak_kubeflow" {
 }
 ```
 
-In most cases, you'll need to override variables related to the GitHub repository (`repository`, `branch`, `owner`) in the `main.tf`. 
+In most cases, you'll need to override variables related to the GitHub repository (`repository`, `branch`, `owner`) in the `main.tf`.
 
 <br>
 
 <a name="clusterserve"></a>
-## 3. Deploy Your Cluster to AWS 
+## 3. Deploy Your Cluster to AWS
 
-Deploy your configured cluster with the following terraform commands: 
+Deploy your configured cluster with the following terraform commands:
 
 ``` bash
-terraform init 
+terraform init
 terraform apply
 aws --region <region> eks update-kubeconfig --name <cluster-name>
 ```
 
-What these commands do: 
-- Initialize Terraform and download all remote dependencies 
-- Create a cluster and a clean EKS with all required AWS resources (IAM roles, ASGs, S3 buckets, etc.) 
-- Update your local `kubeconfig` file to access your newly created EKS cluster in the configured context 
- 
+What these commands do:
+- Initialize Terraform and download all remote dependencies
+- Create a cluster and a clean EKS with all required AWS resources (IAM roles, ASGs, S3 buckets, etc.)
+- Update your local `kubeconfig` file to access your newly created EKS cluster in the configured context
 
-After that, you can manage your Kubernetes cluster with either ArgoCD CLI/UI or `kubectl`. 
+
+After that, you can manage your Kubernetes cluster with either ArgoCD CLI/UI or `kubectl`.
 
 To use `kubectl` (Kubernetes CLI for cluster management), install and configure it using this [official guide](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
 
 <br>
 
 <a name="clusteraccess"></a>
-## 4. Cluster Access and Management 
+## 4. Cluster Access and Management
 
 ### Prepare to start using your cluster
 
-Terraform commands will generate a few files in the default `apps` folder of the repository. You need to commit them in Git and push them to your Github repository to start deploying services to your EKS Kubernetes cluster. 
+Terraform commands will generate a few files in the default `apps` folder of the repository. You need to commit them in Git and push them to your Github repository to start deploying services to your EKS Kubernetes cluster.
 
 Note that ArgoCD is pre-configured to track changes of the current repository. When new changes come to the `apps` folder, it triggers the synchronization process and all objects placed in that folder get created.
 
@@ -180,7 +180,7 @@ To access these URLs, check the email you provided in the `domains` variable for
 - [Access Kubeflow UI after Cluster Deployment](https://vimeo.com/491622856)
 
 
-To learn more about Kubeflow and ArgoCD, you can check out their respective official documentation: 
+To learn more about Kubeflow and ArgoCD, you can check out their respective official documentation:
 - [Kubeflow](https://www.kubeflow.org/docs/pipelines/pipelines-quickstart/)
 - [ArgoCD](https://argoproj.github.io/argo-cd/)
 
@@ -190,16 +190,16 @@ To learn more about Kubeflow and ArgoCD, you can check out their respective offi
 
 ## Kubeflow: Example Use Case
 
-Once you have successfully logged into your Amazon EKS cluster via `kubectl`, access Kubeflow UI, pass all the configuration screens, and you’ll see the Kubeflow dashboard: 
+Once you have successfully logged into your Amazon EKS cluster via `kubectl`, access Kubeflow UI, pass all the configuration screens, and you’ll see the Kubeflow dashboard:
 
 <p align="center">
 <img src="./images/kubeflow-dashboard-ui.png" width="900px" alt="kubeflow-dashboard-ui"/>&nbsp;
 </p>
 
 
-To access Kubeflow Pipelines in the UI, click Pipelines. Kubeflow offers a few samples to let you try pipelines quickly. To learn about using Kubeflow on AWS, please check the [official Kubeflow documentation](https://www.kubeflow.org/docs/aws/). 
+To access Kubeflow Pipelines in the UI, click Pipelines. Kubeflow offers a few samples to let you try pipelines quickly. To learn about using Kubeflow on AWS, please check the [official Kubeflow documentation](https://www.kubeflow.org/docs/aws/).
 
-Alternatively, you can upload your own pipelines using advanced features of AWS and Kubeflow. For instance, let's upload the `kmeans_mnist` [demo module](https://github.com/kubeflow/pipelines/tree/master/samples/contrib/aws-samples/simple_train_pipeline) from the Kubeflow repository with one of the built-in AWS SageMaker algorithms - `kmeans-mnist-pipeline`. 
+Alternatively, you can upload your own pipelines using advanced features of AWS and Kubeflow. For instance, let's upload the `kmeans_mnist` [demo module](https://github.com/kubeflow/pipelines/tree/master/samples/contrib/aws-samples/simple_train_pipeline) from the Kubeflow repository with one of the built-in AWS SageMaker algorithms - `kmeans-mnist-pipeline`.
 
 1. Create a folder for managing separate Terraform states (with resources related to pipeline executions) and add a `main.tf` file with this code:
 
@@ -215,13 +215,13 @@ module kmeans_mnist {
 2. Run Terraform:
 
 ``` bash
-terraform init
+terraform init -backend-config=backend.hcl
 terraform apply
 ```
 
-Terraform will generate a `training_pipeline.yaml` file and create a Kubernetes service account that matches your Kubeflow username and has all the required permissions for AWS for running the pipeline. 
+Terraform will generate a `training_pipeline.yaml` file and create a Kubernetes service account that matches your Kubeflow username and has all the required permissions for AWS for running the pipeline.
 
-The next two steps show how to start using Kubeflow by uploading and running the pipeline. You can check out this video (Vimeo) to see the process (how to upload a pipeline via Kubeflow interface, create an experiment, and start a run): 
+The next two steps show how to start using Kubeflow by uploading and running the pipeline. You can check out this video (Vimeo) to see the process (how to upload a pipeline via Kubeflow interface, create an experiment, and start a run):
 - [Start Using Kubeflow on Amazon EKS](https://vimeo.com/491627420)
 
 
@@ -239,7 +239,7 @@ The next two steps show how to start using Kubeflow by uploading and running the
 
 That's it! Now you have a pipeline executing in Kubeflow.
 
-Any questions? Ask us on Slack: 
+Any questions? Ask us on Slack:
 
 
 [![Join SAKK on Slack](https://img.shields.io/badge/%20-Join%20us%20on%20Slack-blue?style=for-the-badge&logo=slack&labelColor=5c5c5c)]( https://sak-kubeflow.slack.com)

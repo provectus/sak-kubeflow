@@ -1,3 +1,9 @@
+# InettiJ Idea project
+*.iml
+.idea
+
+.envrc
+
 *.hcl
 !.tflint.hcl
 *.tfvars

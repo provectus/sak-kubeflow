@@ -1,5 +1,5 @@
 provider aws {
-  version = "2.66"
+  #version = "2.66"
   region  = var.aws_region
 }
 
