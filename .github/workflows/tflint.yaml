@@ -23,6 +23,14 @@ jobs:
         tflint_version: v0.41.0
         github_token: ${{ secrets.github_token }}
 
+    - uses: hashicorp/setup-terraform@v1
+      name: Setup Terraform
+      with:
+        terraform_version: 1.3.8
+
+    - name: Initialize Terraform
+      run: terraform init
+
     - name: Show version
       run: tflint --version
 
