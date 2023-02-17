@@ -17,12 +17,14 @@ variable repository {
 }
 
 variable aws_region {
+  type        = string
   description = "Name the aws region (us-central-1, us-west-2 and etc.)"
   default     = "us-east-2"
 }
 
 # Name of EKS cluster (Not use underscore in naming. S3 backet name issue)
 variable cluster_name {
+  type        = string
   description = "Name of cluster"
   default     = "sandbox"
 }
@@ -74,21 +76,25 @@ variable admin_arns {
 }
 
 variable cert_manager_email {
-  type = string
+  type        = string
+  description = "Email used for cert manager"
 }
 
 
 variable cognito_users {
-  type    = list(map(string))
-  default = []
+  type        = list(map(string))
+  description = "List of users"
+  default     = []
 }
 
 variable argo_path_prefix {
-  type    = string
-  default = ""
+  type        = string
+  description = "Path prefix for ArgoCD"
+  default     = ""
 }
 
 variable argo_apps_dir {
-  type    = string
-  default = "apps"
+  type        = string
+  description = "ArgoCD apps directory name"
+  default     = "apps"
 }
