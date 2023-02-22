@@ -36,7 +36,7 @@ module sa {
   version                       = "~> v2.25.0"
   create_role                   = true
   role_name                     = "${local.name}-sa-role"
-  provider_url                  = replace(data.aws_eks_cluster.this.identity.0.oidc.0.issuer, "https://", "")
+  provider_url                  = replace(data.aws_eks_cluster.this.identity[0].oidc[0].issuer, "https://", "")
   role_policy_arns              = [aws_iam_policy.sa.arn]
   oidc_fully_qualified_subjects = ["system:serviceaccount:${local.username}:${local.username}"]
 }

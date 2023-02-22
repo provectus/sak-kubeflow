@@ -1,0 +1,41 @@
+name: tflint
+on:
+  pull_request:
+    paths:
+    - '**.tf'
+    - '**.tfvars'
+    - '**.tfvars.json'
+    - '**.hcl'
+
+jobs:
+
+  tflint:
+    name: runner / tflint
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      name: Checkout source code
+
+    - uses: terraform-linters/setup-tflint@v2
+      name: Setup TFLint
+      with:
+        tflint_version: v0.41.0
+        github_token: ${{ secrets.github_token }}
+
+    - uses: hashicorp/setup-terraform@v1
+      name: Setup Terraform
+      with:
+        terraform_version: 1.3.8
+
+    - name: Initialize Terraform
+      run: terraform init
+
+    - name: Show version
+      run: tflint --version
+
+    - name: Init TFLint
+      run: tflint --init
+
+    - name: Run TFLint
+      run: tflint -f --recursive compact

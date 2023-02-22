@@ -1,8 +1,14 @@
 config {
   module = true
-  deep_check = false
   force = false
   disabled_by_default = false
+  variables = ["cluster_name=github-actions-cluster"]
+}
+
+plugin "aws" {
+  enabled = true
+  version = "0.17.1"
+  source  = "github.com/terraform-linters/tflint-ruleset-aws"
 }
 
 rule "aws_instance_invalid_type" {
